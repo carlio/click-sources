@@ -1,4 +1,5 @@
 import os
+import typing as t
 from configparser import ConfigParser, MissingSectionHeaderError
 
 from .exceptions import FileDoesNotExistException, FileParseFailedException
@@ -17,7 +18,7 @@ class IniFileSource:
 
         self._section = section
 
-    def get_parsed(self):
+    def get_parsed(self) -> t.Dict[str, t.Any]:
         parser = ConfigParser()
         try:
             parser.read(self._path)

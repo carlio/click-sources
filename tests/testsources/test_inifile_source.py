@@ -1,6 +1,7 @@
+from datetime import datetime
 from unittest import TestCase
 
-from click import BadParameter
+import click
 
 from click_sources.exceptions import FileDoesNotExistException, FileParseFailedException
 from click_sources.inifile import IniFileSource
@@ -46,4 +47,19 @@ class TestIniFileSource(TestCase):
             ]
         )
         source = IniFileSource(options, get_resource("bad-types.ini"), "parse_me")
-        self.assertRaises(BadParameter, source.get_parsed)
+        self.assertRaises(click.BadParameter, source.get_parsed)
+
+    def test_valid_file(self):
+        options = Options(
+            [
+                Option(["-e", "elephants"], type=bool),
+                Option(["-n", "name"], type=str),
+                Option(["-c", "count"], type=int),
+                Option(["-b", "birthday"], type=click.DateTime()),
+            ]
+        )
+        source = IniFileSource(options, get_resource("valid-config.ini"), "parse_this")
+        self.assertEqual(
+            {"elephants": True, "name": "barney", "count": 23, "birthday": datetime(year=1901, day=1, month=1)},
+            source.get_parsed(),
+        )

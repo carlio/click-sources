@@ -37,3 +37,15 @@ class TestJsonFileSource(ConfigSourceTestBase):
             {"elephants": True, "name": "barney", "count": 23, "birthday": datetime(year=1901, day=1, month=1)},
             source.get_parsed(),
         )
+
+    def test_invalid_file(self):
+        options = Options(
+            [
+                Option(["-e", "elephants"], type=bool),
+                Option(["-n", "name"], type=str),
+                Option(["-c", "count"], type=int),
+                Option(["-b", "birthday"], type=click.DateTime()),
+            ]
+        )
+        source = JsonFileSource(options, get_resource("json/invalid-types.json"))
+        self.assertRaises(click.BadParameter, source.get_parsed)

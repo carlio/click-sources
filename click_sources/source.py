@@ -14,10 +14,10 @@ class ConfigSource(abc.ABC):
     def get_parsed(self) -> t.Dict[str, t.Any]:
         raise NotImplementedError
 
-    def _type_cast_dict(self, dict):
+    def _type_cast_dict(self, data: t.Dict[str, t.Any]) -> t.Dict[str, t.Any]:
         parsed = {}
         for option in self._options.iter_options():
-            value = dict.get(option.name)
+            value = data.get(option.name)
             if value is not None:
                 value = option.process_value({}, value)
                 parsed[option.name] = value

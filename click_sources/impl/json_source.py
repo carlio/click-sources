@@ -10,6 +10,8 @@ class JsonFileSource(FileConfigSource):
     def get_parsed(self) -> t.Dict[str, t.Any]:
         with open(self._path) as f:
             try:
-                return self._type_cast_dict(json.load(f))
+                content = json.load(f)
+                content = {k: str(v) for k, v in content.items()}
+                return self._type_cast_dict(content)
             except JSONDecodeError as e:
                 raise FileParseFailedException from e
